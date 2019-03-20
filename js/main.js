@@ -24,7 +24,7 @@ function search(e){
 
 function ajaxSearch(){
     var xhr = new XMLHttpRequest();
-    let url = `http://www.omdbapi.com/?apikey=${apikey}&s=${searchString.value}&y=${year.value}&type=${typeValue = type.value != 'All' ? type.value : ""}`;
+    let url = `https://www.omdbapi.com/?apikey=${apikey}&s=${searchString.value}&y=${year.value}&type=${typeValue = type.value != 'All' ? type.value : ""}`;
     console.log(url);
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
