@@ -4,9 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/modal.css">
     <title>Document</title>
 </head>
 <body>
-    <script src="nav.js"></script>
+    <button id="modal-btn" class="button">More Info</button>
+    <div id="my-modal" class="modal">
+        <div class="model-content">
+            <div class="model-header">
+                <span class="close">&times;</span>
+                <h2>Modal Header</h2>
+            </div>
+            <div class="modal-body">
+                This is modal body
+            </div>
+        </div>
+    </div>
+    <script>// Get DOM Elements
+            const modal = document.querySelector('#my-modal');
+            const modalBtn = document.querySelector('#modal-btn');
+            const closeBtn = document.querySelector('.close');
+            
+            // Events
+            modalBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', outsideClick);
+            
+            // Open
+            function openModal() {
+              modal.style.display = 'block';
+            }
+            
+            // Close
+            function closeModal() {
+              modal.style.display = 'none';
+            }
+            
+            // Close If Outside Click
+            function outsideClick(e) {
+              if (e.target == modal) {
+                modal.style.display = 'none';
+              }
+            }
+            
+    </script>
 </body>
 </html>
