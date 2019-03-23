@@ -95,7 +95,7 @@ function fetchResult(page = 1){
             btn.classList.add("button");
             btn.setAttribute('data-id' , data.Search[i].imdbID);
             btn.setAttribute('id' , 'modal-btn');
-            let info = document.createTextNode('More Info');
+            let info = document.createTextNode('More Info  (Coming soon )');
             btn.appendChild(info);
             card.appendChild(btn);
             main.appendChild(card);
