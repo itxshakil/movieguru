@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="white" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Movie Guru" />
+    <meta name="msapplication-TitleImage" content="images/logo-144.png" />
+    <meta name="msapplication-TitleColor" content="#ffffff" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/logo-152.png">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="css/style.css">
     <title>Movie Guru </title>
-    <script>
-    if('serviceWorker' in navigator){
-        navigator.serviceWorker.register('service-worker.js').then(() => console.log('service worker registered.')).catch( err => console.log('Error ' , err));
-    }
-    </script>
 </head>
 <body>
     <header>
@@ -40,6 +44,15 @@
         <div class="footer-copyright">Movie Guru &copy; 2019. All Rights Reserved.</div>
         <div class="credit">Designed with <span class="heart">♥</span> By Shakil Alam</div>
     </footer>
+    
+    <script>
+            window.onload = () => {
+                'use strict';
+                if('serviceWorker' in  navigator){
+                    navigator.serviceWorker.register('./sw.js');
+                }
+            }
+        </script>
     <script src="js/__main.js"></script>
 </body>
 </html>
