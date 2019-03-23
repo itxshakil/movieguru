@@ -10,10 +10,74 @@ form.addEventListener('submit' , function(e){
     e.preventDefault();
     ajaxSearch();
 });
+
+
+
 target.addEventListener("click" , mainClick);
 function mainClick(e){
     if(e.target.classList.contains('btn')){
-        console.log(e.target.dataset.id);
+        let imdbID = e.target.dataset.id;
+
+
+// Get DOM Elements
+
+        console.log(imdbID);
+        let myModal = document.createElement('div');    
+        myModal.setAttribute('id' ,  'my-modal');
+        myModal.setAttribute('class' ,  'modal');
+        let modalContent = document.createElement('div');
+        modalContent.classList.add('model-content');
+        let modalHeader = document.createElement('div');
+        modalHeader.classList.add('model-header');
+        let spanClose = document.createElement('span');
+        spanClose.classList.add('close');
+        let closeContent= document.createTextNode('&times;');
+        spanClose.appendChild(closeContent);
+        let h2 = document.createElement('h2');
+        modalHeader.appendChild(h2);
+        modalHeader.appendChild(spanClose);
+        modalContent.appendChild(modalHeader);
+        let modalBody = document.createElement('div');
+        let textBody = document.createTextNode('This is text body')
+        modalContent.appendChild(modalBody);
+        myModal.appendChild(modalContent);
+        main.appendChild(myModal);
+
+        const modal = document.querySelector('#my-modal');
+const modalBtn = document.querySelector('#modal-btn');
+const closeBtn = document.querySelector('.close');
+
+
+
+modal.style.display = 'block';
+closeBtn.addEventListener('click', closeModal);
+
+// Events
+modalBtn.addEventListener('click', openModal);
+window.addEventListener('click', outsideClick);
+
+// Open
+function openModal() {
+  modal.style.display = 'block';
+  closeBtn.addEventListener('click', closeModal);
+}
+
+// Close
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+// Close If Outside Click
+function outsideClick(e) {
+  if (e.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+
+
+
+        
+        moreInfo(imdbID);
     }
 }
 function navClickListener(e){
@@ -94,7 +158,9 @@ function ajaxSearch(page = 1){
           card.appendChild(h3);
           let btn = document.createElement("button") 
           btn.classList.add("btn");
+          btn.classList.add("button");
           btn.setAttribute('data-id' , data.Search[i].imdbID);
+          btn.setAttribute('id' , 'modal-btn');
           let info = document.createTextNode('More Info');
           btn.appendChild(info);
           card.appendChild(btn);
