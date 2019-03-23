@@ -1,8 +1,7 @@
 {
     "name" : "Movie Guru",
     "short_name" : "Movinfo",
-    "icons" : [
-        {
+    "icons" : [{
             "src" :"images/logo-128.png",
             "size" : "128x128",
             "type" : "image/png"
@@ -31,8 +30,7 @@
             "src" :"images/logo-512.png",
             "size" : "512x512",
             "type" : "image/png"
-        }
-    ],
+        }],
     "lang" : "en-US",
     "start_url" : "/index.html",
     "display" : "standalone",
