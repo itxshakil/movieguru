@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,30 +17,36 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Movie Guru </title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-136756383-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136756383-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-136756383-1');
-</script>
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-136756383-1');
+    </script>
 
 </head>
+
 <body>
     <header>
         <div class="header-wrapper">
-            <div class="header-title"><h1>Movie Guru</h1></div>
+            <div class="header-title">
+                <h1>Movie Guru</h1>
+            </div>
             <div class="header-form-wrapper">
                 <div class="form-wrapper">
                     <form id="searchForm" action="" method="get">
                         <input type="text" name="s" id="search" placeholder="Search Movies..." required />
                         <input type="number" name="year" id="year" min="1900" max="2099" step="1" placeholder="Year" />
                         <select name="type" id="type">
-                                <option value="" selected>All</option>
-                                <option value="Movies">Movies</option>
-                                <option value="Series">Series</option>
-                                <option value="Episodes">Episodes</option>
+                            <option value="" selected>All</option>
+                            <option value="Movies">Movies</option>
+                            <option value="Series">Series</option>
+                            <option value="Episodes">Episodes</option>
                         </select>
                         <input type="submit" value="Search">
                     </form>
@@ -47,21 +54,23 @@
             </div>
         </div>
     </header>
-    <main id="main"> 
-        
+    <main id="main">
+
     </main>
     <footer>
         <div class="footer-copyright">Movie Guru &copy; 2019. All Rights Reserved.</div>
-        <div class="credit">Designed with <span class="heart">♥</span> By <a href="https://github.com/Itxshakiil">Shakil Alam</a></div>
+        <div class="credit">Designed with <span class="heart">♥</span> By <a href="https://github.com/Itxshakiil">Shakil
+                Alam</a></div>
     </footer>
     <script src="js/main.js"></script>
     <script>
-            window.onload = () => {
-                'use strict';
-                if('serviceWorker' in  navigator){
-                    navigator.serviceWorker.register('./sw.js');
-                }
+        window.onload = () => {
+            'use strict';
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
             }
-        </script>
+        }
+    </script>
 </body>
+
 </html>

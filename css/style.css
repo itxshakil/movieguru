@@ -149,7 +149,9 @@ main{
   }
   
   
-  
+  .ratings-i {
+    margin-left: 1em;
+  }
   .button {
     background: #428bca;
     padding: 1em 2em;
@@ -165,20 +167,22 @@ main{
   
   .modal {
     display: none;
-    position: fixed;
+    position: absolute;
     z-index: 1;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    min-width:320px;
+    top: 10%;
+    transform: translate(-50%, -10%);
+    max-width: 90vw;
+    word-wrap: break-word;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.76);
     color:white;
+
   }
   
   .modal-content {
-    margin: 10% auto;
-    width: 60%;
+    margin: 0 auto;
+    width: 100%;
     box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
     animation-name: modalopen;
     animation-duration: var(--modal-duration);
@@ -198,11 +202,16 @@ main{
   }
   
   .modal-body {
+    float:left;
     padding: 10px 20px;
     color:black;
     background: #fff;
   }
-  
+
+  .modal-body h3 , .modal-body h2 {
+    
+    font-weight: 400;
+  }
   .modal-footer {
     background: var(--modal-color);
     padding: 10px;
@@ -213,10 +222,14 @@ main{
   }
   
   .close {
-    color: #ccc;
+    color: #000;
     float: right;
     font-size: 30px;
-    color: #fff;
+    position:absolute;
+    top:0;
+    left:90%;
+
+
   }
   
   .close:hover,
