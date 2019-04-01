@@ -170,14 +170,16 @@ main{
     position: absolute;
     z-index: 1;
     left: 50%;
-    top: 10%;
-    transform: translate(-50%, -10%);
-    max-width: 90vw;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width:75vw;
+    min-width: 320px;
     word-wrap: break-word;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.76);
     color:white;
-
+    border:1px solid #333;
+    box-shadow: 2px 3px 17px #555;
   }
   
   .modal-content {
@@ -202,7 +204,6 @@ main{
   }
   
   .modal-body {
-    float:left;
     padding: 10px 20px;
     color:black;
     background: #fff;
