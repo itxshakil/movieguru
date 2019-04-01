@@ -167,19 +167,14 @@ main{
   
   .modal {
     display: none;
-    position: absolute;
+    position: fixed;
     z-index: 1;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width:75vw;
-    min-width: 320px;
-    word-wrap: break-word;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.76);
-    color:white;
-    border:1px solid #333;
-    box-shadow: 2px 3px 17px #555;
+    background-color: rgba(0, 0, 0, 0.5);
   }
   
   .modal-content {
