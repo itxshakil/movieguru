@@ -1,242 +1,240 @@
 const apikey = 'eaa8df42';
 const main = document.getElementById('main');
-const form = document.getElementById('searchForm');
-const searchString = form.querySelector("#search");
-const y = form.querySelector("input[type='number']");
-const type = form.querySelector("select");
+const searchForm = document.getElementById('searchForm');
+const searchString = searchForm.querySelector("#search");
+const y = searchForm.querySelector("input[type='number']");
+const type = searchForm.querySelector("select");
 
-// This is just for initialisation 
-let sValue = "";
-let yearValue = "";
-let typeValue = "";
+let cardwrapper = createElement("div", "card-wrapper");
+main.addEventListener('click', moreInfo);
 
-// loading text htmlElement
-let loading = null;
-let loadingText = "";
-
-// search Form Listener
-form.addEventListener('submit', function (e) {
+searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    // because if after submitting form if user change value it wont cause to load more Results.
-    sValue = searchString.value;
-    yearValue = y.value;
-    typeValue = type.value;
-    // Clear Main Area
-    while (main.firstChild) {
-        main.removeChild(main.firstChild);
+
+    clearPreviousResult();
+
+    if (searchString.value.trim().length == 0) {
+        showMessage("Please enter movie name");
+        return false;
     }
 
     fetchResult();
-    main.addEventListener('click', moreInfo);
 });
 
-// Main Function for fetching search result
-
-function fetchResult(page = 1) {
-    let xhr = new XMLHttpRequest();
-    let url = 'https://www.omdbapi.com/?apikey=' + apikey + '&s=' + sValue + '&y=' + yearValue + '&type=' + typeValue + '&page=' + page;
-    if (page != 1) {
-        // Remove Load More Button
-        let loadBtn = document.querySelector('.load-btn');
-        loadBtn.parentNode.removeChild(loadBtn);
+function clearPreviousResult() {
+    while (main.firstChild) {
+        main.removeChild(main.firstChild);
     }
-    xhr.open("GET", url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 2) {
-            // because we want to delete this in different block
-            loading = document.createElement('div');
-            loadingText = document.createTextNode('Loading Please Wait...');
-            loading.appendChild(loadingText);
-            main.appendChild(loading);
-        }
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // Remove Loading Text
-            loading.parentNode.removeChild(loading);
-
-            let data = JSON.parse(xhr.response);
-            if (data.Response == 'False') {
-                let h3 = document.createElement('h3');
-                let error = document.createTextNode(data.Error);
-                h3.appendChild(error);
-                main.appendChild(h3);
-            } else {
-                for (let i = 0, length = data.Search.length; i < length; i++) {
-                    let card = document.createElement("div");
-                    card.classList.add("card");
-                    let img = document.createElement("img");
-                    img.setAttribute('height', '320px');
-                    img.setAttribute('width', '100%');
-                    img.setAttribute('alt', data.Search[i].Title);
-                    img.setAttribute('class', 'poster');
-                    img.src = data.Search[i].Poster != "N/A" ? data.Search[i].Poster : "no-poster.jpg";
-                    card.appendChild(img);
-                    let h2 = document.createElement("h2");
-                    h2.classList.add("title");
-                    let title = document.createTextNode(data.Search[i].Title);
-                    // Font size on basis of title length so long title dont mess card layout
-                    if (title.length > 20) {
-                        h2.style.fontSize = ".9rem";
-                    }
-                    h2.appendChild(title);
-                    card.appendChild(h2);
-                    let h3 = document.createElement("h3");
-                    h3.classList.add("year");
-                    let year = document.createTextNode('Year : ' + data.Search[i].Year);
-                    h3.appendChild(year);
-                    card.appendChild(h3);
-                    h3 = document.createElement("h3");
-                    h3.classList.add("type");
-                    let type = document.createTextNode('Type : ' + data.Search[i].Type);
-                    h3.appendChild(type);
-                    card.appendChild(h3);
-                    let btn = document.createElement("button")
-                    btn.classList.add("btn");
-                    btn.classList.add("button");
-                    btn.setAttribute('data-id', data.Search[i].imdbID);
-                    btn.setAttribute('id', 'modal-btn');
-                    let info = document.createTextNode('More Info');
-                    btn.appendChild(info);
-                    card.appendChild(btn);
-                    main.appendChild(card);
-                }
-                if (Math.ceil(data.totalResults / 10) > page) {
-                    const loadBtn = document.createElement("button")
-                    loadBtn.classList.add("load-btn");
-                    loadBtn.setAttribute('data-page', ++page);
-                    let info = document.createTextNode('Load More');
-                    loadBtn.appendChild(info)
-                    main.appendChild(loadBtn);
-                    loadBtn.addEventListener('click', function (e) {
-                        fetchResult(e.target.dataset.page);
-                    });
-                }
-            }
-
-        }
-    }
-    xhr.send();
 }
 
-// Function for more info 
+function removeLoadMoreBtn() {
+    let loadBtn = document.querySelector('.load-btn');
+    loadBtn.parentNode.removeChild(loadBtn);
+}
+
+function showLoadingText() {
+    let loading = createElement('div', 'loading');
+    loadingText = document.createTextNode('Loading Please Wait...');
+    loading.appendChild(loadingText);
+    main.appendChild(loading);
+}
+
+function removeLoading() {
+    let loading = document.querySelector('div.loading');
+    loading.parentNode.removeChild(loading);
+}
+
+function fetchResult(page = 1) {
+    let name = searchString.value.trim();
+    let year = y.value;
+    let searchType = type.value;
+    let url = `https://www.omdbapi.com/?apikey=${apikey}&s=${name}&y=${year}&type=${searchType}&page=${page}`;
+
+    if (page != 1) removeLoadMoreBtn();
+
+    showLoadingText();
+
+    fetch(url)
+        .then(response => {
+            response.json()
+                .then((data) => {
+                    removeLoading();
+                    handleResult(data, page);
+                })
+                .catch((err) => {
+                    showMessage(err);
+                })
+        }).catch(() => {
+            showMessage("Some error occured");
+        });
+}
+
+function createElement(tagName, ...classes) {
+    let element = document.createElement(tagName);
+    element.classList.add(...classes);
+
+    return element;
+}
+
+function createCardElement(item) {
+    let card = createElement("div", "card");
+
+    let img = createElement("img", "poster");
+    img.setAttribute("height", "320px");
+    img.setAttribute("width", "100%");
+    img.setAttribute("alt", item.Title);
+    img.setAttribute("loading", "lazy");
+    img.src = item.Poster != "N/A" ? item.Poster : "no-poster.jpg"
+    card.appendChild(img);
+
+    let h2 = createElement("h2");
+    let title = document.createTextNode(item.Title);
+    h2.appendChild(title);
+    card.appendChild(h2);
+
+    let h3 = createElement("h3");
+    let year = document.createTextNode("Year : " + item.Year);
+    h3.appendChild(year);
+    card.appendChild(h3);
+
+    h3 = createElement("h3");
+    let type = document.createTextNode("Type : " + item.Type);
+    h3.appendChild(type);
+    card.appendChild(h3);
+
+    let btn = createElement("button", "model-btn")
+    btn.setAttribute('data-id', item.imdbID);
+    btn.setAttribute('id', 'modal-btn');
+    let info = document.createTextNode('More Info');
+    btn.appendChild(info);
+    card.appendChild(btn);
+    return card;
+}
+
+function handleResult(data, page) {
+    if (data.Response === 'False') {
+        showMessage(data.Error);
+    } else {
+        for (let i = 0, length = data.Search.length; i < length; i++) {
+            let card = createCardElement(data.Search[i]);
+            cardwrapper.appendChild(card);
+        }
+        main.appendChild(cardwrapper);
+        if (Math.ceil(data.totalResults / 10) > page) {
+            const loadBtn = createElement("button", "load-btn")
+            loadBtn.setAttribute('data-page', ++page);
+            let info = document.createTextNode('Load More');
+            loadBtn.appendChild(info)
+            main.appendChild(loadBtn);
+            loadBtn.addEventListener('click', function (e) {
+                fetchResult(e.target.dataset.page);
+            });
+        }
+    }
+}
+
+function showMessage(errorText) {
+    let h3 = document.createElement('h3');
+    let error = document.createTextNode(errorText);
+    h3.appendChild(error);
+    main.appendChild(h3);
+}
 
 function moreInfo(e) {
-    if (e.target.classList.contains('btn')) {
+    if (e.target.classList.contains('model-btn')) {
         const imdbID = e.target.dataset.id;
         fetchInfo(imdbID);
     }
 }
 
-function fetchInfo(imdbID) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://www.omdbapi.com/?apikey=${apikey}&i=${imdbID}&plot=full`;
-    xhr.open("GET", url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 2) {
-            // for use in Future
+function showModal() {
+    let modal = document.querySelector('#my-modal');
+    const closeBtn = document.querySelector('.close');
+
+    modal.style.display = 'block';
+
+    document.getElementById('my-modal').scrollIntoView();
+    closeBtn.addEventListener('click', closeModal);
+
+}
+
+function closeModal() {
+    let modal = document.querySelector('#my-modal');
+    modal.parentNode.removeChild(modal);
+}
+
+function createModal(data) {
+    let myModal = createElement('div', 'modal');
+    myModal.setAttribute('id', 'my-modal');
+
+    let modalHeader = createElement('div', 'modal-header');
+
+    let spanClose = createElement('span', 'close');
+    let closebtn = document.createTextNode('x');
+    spanClose.appendChild(closebtn);
+
+    modalHeader.appendChild(spanClose);
+
+    let modalBody = createElement('div', 'modal-body');
+
+    for (const [key, value] of Object.entries(data)) {
+        if (key == 'Response' || key == 'Type') {
+            continue;
         }
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            let data = JSON.parse(xhr.response);
-            let myModal = document.createElement('div');
-            myModal.setAttribute('id', 'my-modal');
-            myModal.classList.add('modal');
-            let modalContent = document.createElement('div');
-            modalContent.classList.add('modal-content');
-            let modalHeader = document.createElement('div');
-            modalHeader.classList.add('modal-header');
-            let spanClose = document.createElement('span');
-            spanClose.classList.add('close');
-            let closeContent = document.createTextNode('x');
-            spanClose.appendChild(closeContent);
-            modalHeader.appendChild(spanClose);
-            modalContent.appendChild(modalHeader);
-            let modalBody = document.createElement('div');
-            modalBody.classList.add('modal-body');
-            let textBody = document.createElement('div');
-            // All data append here 
-            // we will look to this later
-            // Object.keys(data).forEach(e => console.log(`key=${e}  value=${data[e]}`));
-            for (const [key, value] of Object.entries(data)) {
-                if (key == 'Response' || key == 'Type') {
-                    continue;
-                }
-                if (key == 'Ratings') {
-                    let ratings = document.createElement('h3');
-                    let textratings = document.createTextNode('Ratings :');
-                    ratings.appendChild(textratings);
-                    textBody.appendChild(ratings);
-                    for (let i = 0; i < value.length; i++) {
 
-                        let h3 = document.createElement('h3');
-                        h3.classList.add('ratings-i');
-                        let textValue = document.createTextNode(`${data.Ratings[i].Source} : ${data.Ratings[i].Value}`);
-                        h3.appendChild(textValue);
-                        textBody.appendChild(h3);
-                    }
-                    continue;
-                }
-                if (key == 'Title') {
+        if (key == 'Ratings') {
+            let ratings = createElement('h3');
+            let textratings = document.createTextNode('Ratings :');
+            ratings.appendChild(textratings);
+            modalBody.appendChild(ratings);
 
-                    let h2 = document.createElement('h2');
-                    let headerTitle = document.createTextNode(value);
-                    h2.appendChild(headerTitle);
-                    modalHeader.appendChild(h2);
-                    continue;
-                }
-                if (key == 'Poster') {
-                    let img = document.createElement("img");
-                    img.setAttribute('height', '320px');
-                    img.setAttribute('width', '310px');
-                    img.setAttribute('alt', 'Poster');
-                    img.setAttribute('class', 'poster');
-                    img.src = value != "N/A" ? value : "no-poster.jpg";
-                    textBody.prepend(img);
-                    continue;
-                }
-                let h3 = document.createElement('h3');
-                let textValue = document.createTextNode(`${key} : ${value}`);
+            for (let i = 0; i < value.length; i++) {
+                let h3 = createElement('h3', "ratings-" + i);
+                let textValue = document.createTextNode(`${data.Ratings[i].Source} : ${data.Ratings[i].Value}`);
                 h3.appendChild(textValue);
-                textBody.appendChild(h3);
+                modalBody.appendChild(h3);
             }
-
-            modalBody.appendChild(textBody);
-            modalContent.appendChild(modalBody);
-            modalContent.appendChild(modalBody);
-            myModal.appendChild(modalContent);
-            main.appendChild(myModal);
-            const modal = document.querySelector('#my-modal');
-            const modalBtn = document.querySelector('#modal-btn');
-            const closeBtn = document.querySelector('.close');
-
-            modal.style.display = 'block';
-
-
-            document.getElementById('my-modal').scrollIntoView();
-            closeBtn.addEventListener('click', closeModal);
-
-            // Events
-            modalBtn.addEventListener('click', openModal);
-            window.addEventListener('click', outsideClick);
-
-            // Open
-            function openModal() {
-                modal.style.display = 'block';
-                closeBtn.addEventListener('click', closeModal);
-            }
-
-            // Close
-            function closeModal() {
-                myModal.parentNode.removeChild(myModal);
-            }
-
-            // Close If Outside Click
-            function outsideClick(e) {
-                if (e.target == modal) {
-                    myModal.parentNode.removeChild(myModal);
-                }
-            }
+            continue;
         }
 
-    }
+        if (key == 'Title') {
+            let h2 = createElement('h2');
+            let headerTitle = document.createTextNode(value);
+            h2.appendChild(headerTitle);
+            modalHeader.appendChild(h2);
+            continue;
+        }
 
-    xhr.send();
+        if (key == 'Poster') {
+            let img = createElement("img");
+            img.setAttribute('height', '320px');
+            img.setAttribute('width', '310px');
+            img.setAttribute('alt', 'Poster');
+            img.setAttribute('class', 'poster');
+            img.src = value != "N/A" ? value : "no-poster.jpg";
+            modalBody.prepend(img);
+            continue;
+        }
+
+        let h3 = document.createElement('h3');
+        let textValue = document.createTextNode(`${key} : ${value}`);
+        h3.appendChild(textValue);
+        modalBody.appendChild(h3);
+
+        myModal.appendChild(modalHeader);
+        myModal.appendChild(modalBody);
+        main.appendChild(myModal);
+    }
+}
+
+function fetchInfo(imdbID) {
+    let url = `https://www.omdbapi.com/?apikey=${apikey}&i=${imdbID}&plot=full`;
+
+    fetch(url).then(response => {
+        response.json().then(data => {
+            createModal(data);
+            showModal();
+
+        })
+    })
 }

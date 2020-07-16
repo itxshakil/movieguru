@@ -16,8 +16,9 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="css/style.css">
     <title>Movie Guru </title>
+    <script src="./js/main.js" defer></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136756383-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136756383-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -27,42 +28,35 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-136756383-1');
-    </script>
-
+    </script> -->
 </head>
 
 <body>
     <header>
-        <div class="header-wrapper">
-            <div class="header-title">
-                <h1>Movie Guru</h1>
+        <h1>Movie Guru</h1>
+        <form id="searchForm">
+            <input type="text" name="s" id="search" placeholder="Search Movies..." required />
+            <div>
+                <input type="number" name="year" id="year" min="1900" max="2099" step="1" placeholder="Year" />
+                <select name="type" id="type">
+                    <option value="" selected>All</option>
+                    <option value="Movies">Movies</option>
+                    <option value="Series">Series</option>
+                    <option value="Episodes">Episodes</option>
+                </select>
             </div>
-            <div class="header-form-wrapper">
-                <div class="form-wrapper">
-                    <form id="searchForm" action="" method="get">
-                        <input type="text" name="s" id="search" placeholder="Search Movies..." required />
-                        <input type="number" name="year" id="year" min="1900" max="2099" step="1" placeholder="Year" />
-                        <select name="type" id="type">
-                            <option value="" selected>All</option>
-                            <option value="Movies">Movies</option>
-                            <option value="Series">Series</option>
-                            <option value="Episodes">Episodes</option>
-                        </select>
-                        <input type="submit" value="Search">
-                    </form>
-                </div>
-            </div>
-        </div>
+            <button>Search</button>
+        </form>
     </header>
     <main id="main">
 
     </main>
     <footer>
         <div class="footer-copyright">Movie Guru &copy; 2019. All Rights Reserved.</div>
-        <div class="credit">Designed with <span class="heart">♥</span> By <a href="https://github.com/Itxshakiil">Shakil
+        <div class="credit">Designed with <span class="heart" role="icon">♥</span> By <a
+                href="https://shakil.netlifya.app">Shakil
                 Alam</a></div>
     </footer>
-    <script src="js/main.js"></script>
     <script>
         window.onload = () => {
             'use strict';
