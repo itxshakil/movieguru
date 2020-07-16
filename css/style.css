@@ -4,7 +4,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -16,7 +18,6 @@ html {
 
 footer a {
   color: inherit;
-  text-decoration: none;
 }
 body {
   position: relative;
@@ -50,7 +51,7 @@ select {
   outline: none;
   border: none;
   border-radius: 1rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 2px 2px 3px #37474f;
 }
 
 button {
@@ -80,7 +81,6 @@ footer {
   padding: 0.5rem;
   background: #37474f;
   color: #deedfd;
-  font-weight: 200;
 }
 .heart {
   color: red;
@@ -93,21 +93,14 @@ footer {
   flex-wrap: wrap;
 }
 .card {
-  flex-basis:360px;
+  flex-basis: 360px;
   border-radius: 0.5rem;
   box-shadow: 2px 2px 9px #37474f;
 }
 
 .card img {
   max-width: 360px;
-  border-radius: 0.5rem;
-}
-
-.card.full {
-  min-width: 90vw;
-}
-.card.full img {
-  width: 100%;
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 .card h3 {
   font-weight: 600;
@@ -126,28 +119,27 @@ footer {
 
 .modal {
   display: none;
-  position: fixed;
+  position: absolute;
   z-index: 1;
   left: 1rem;
+  right: 1rem;
   top: 1rem;
   height: 100%;
-  width: calc(100% -  1rem);
+  width: calc(100% - 2rem);
   overflow-x: hidden;
   background-color: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+  box-shadow: 2px 2px 9px #37474f;
   animation-name: modalopen;
   animation-duration: var(--modal-duration);
-  border-radius:.5rem;
+  border-radius: 0.5rem;
 }
 
 .modal-content {
   margin: 0 auto;
   width: 100%;
-  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-.modal-header h2,
-.modal-footer h3 {
+.modal-header h2{
   margin: 0;
 }
 
@@ -161,19 +153,12 @@ footer {
   padding: 10px 20px;
   color: black;
   background: #fff;
+  border-radius: 0 0 1rem 1rem;
 }
 
 .modal-body h3,
 .modal-body h2 {
   font-weight: 400;
-}
-.modal-footer {
-  background: var(--modal-color);
-  padding: 10px;
-  color: #fff;
-  text-align: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
 }
 
 .close {
@@ -185,7 +170,7 @@ footer {
 
 .close:hover,
 .close:focus {
-  color: #000;
+  color: red;
   text-decoration: none;
   cursor: pointer;
 }
