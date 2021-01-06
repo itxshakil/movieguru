@@ -5,7 +5,7 @@ const searchForm = document.getElementById('searchForm');
 const searchInput = searchForm.querySelector("#search");
 const y = searchForm.querySelector("input[type='number']");
 const type = searchForm.querySelector("select");
-let cardwrapper = createElement("div", "card-wrapper");
+let cardwrapper;
 main.addEventListener('click', mainClicked);
 searchForm.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -14,6 +14,7 @@ searchForm.addEventListener('submit', function (event) {
         showMessage("Please enter movie name");
         return false;
     }
+    cardwrapper = createElement("div", "card-wrapper");
     fetchResult();
 });
 function clearPreviousResult() {
