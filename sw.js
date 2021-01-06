@@ -1,10 +1,10 @@
 var cacheName =  'movie-guru';
 // Change main js file name
 var filesToCache = [
-    '/',
-    '/index.html',
-    '/css/style.css',
-    '/js/main.js'
+    '/movie-guru/',
+    '/movie-guru/index.html',
+    '/movie-guru/css/style.css',
+    '/movie-guru/js/main.js'
 ];
 
 // Start the service worker and cache all of the app's content
