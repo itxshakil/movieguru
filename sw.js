@@ -1,27 +1,30 @@
-var cacheName =  'movie-guru';
-// Change main js file name
-var filesToCache = [
+var CACHE_NAME = 'my-site-cache-v3';
+var urlsToCache = [
     '/movie-guru/',
     '/movie-guru/index.html',
     '/movie-guru/css/style.css',
     '/movie-guru/js/main.js'
 ];
 
-// Start the service worker and cache all of the app's content
-self.addEventListener('install' , function(e){
-    e.waitUntil(
-        caches.open(cacheName).then(function(cache){
-            return cache.addAll(filesToCache);
-        })
-    );
+self.addEventListener('install', function (event) {
+    event.waitUntil(caches.open(CACHE_NAME).then(function (cache) {
+        return cache.addAll(urlsToCache);
+    }));
 });
-
-// Serve Cache content when offline
-
-self.addEventListener('fetch', function(e){
-    e.respondWith(
-        caches.match(e.request).then(function(response){
-            return response || fetch(e.request);
-        })
-    );
+self.addEventListener('fetch', function (event) {
+    event.respondWith(caches.match(event.request).then(function (response) {
+        if (response) {
+            return response;
+        }
+        return fetch(event.request).then(function (response) {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+                return response;
+            }
+            var responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(function (cache) {
+                cache.put(event.request, responseToCache);
+            });
+            return response;
+        });
+    }));
 });
