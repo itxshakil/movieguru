@@ -1,8 +1,8 @@
-const apikey = 'eaa8df42';
+const APIKEY = 'eaa8df42';
 const main = document.getElementById('main') as HTMLElement;
 const searchForm = document.getElementById('searchForm') as HTMLFormElement;
 const searchInput = searchForm.querySelector("#search") as HTMLInputElement;
-const y = searchForm.querySelector("input[type='number']") as HTMLInputElement;
+const yearInput = searchForm.querySelector("input[type='number']") as HTMLInputElement;
 const type = searchForm.querySelector("select") as HTMLSelectElement;
 
 let cardwrapper:HTMLDivElement;
@@ -18,7 +18,7 @@ searchForm.addEventListener('submit', function (event: Event) {
         showMessage("Please enter movie name");
         return false;
     }
-    
+
     cardwrapper = createElement("div", "card-wrapper") as HTMLDivElement;
     fetchResult();
 });
@@ -27,6 +27,30 @@ function clearPreviousResult() {
     while (main.firstChild) {
         main.removeChild(main.firstChild);
     }
+}
+
+function fetchResult(pageNumber = 1) {
+    let name = searchInput.value.trim();
+    let year = yearInput.value;
+    let searchType = type.value;
+    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${name}&y=${year}&type=${searchType}&page=${pageNumber}`;
+
+    if (pageNumber != 1) removeLoadMoreBtn();
+
+    showLoadingText();
+
+    fetch(url)
+        .then(response => {
+            response.json()
+                .then((data) => {
+                    handleResult(data, pageNumber);
+                })
+                .catch((err) => {
+                    showMessage(err);
+                })
+        }).catch(() => {
+            showMessage("Some error occured");
+        });
 }
 
 function removeLoadMoreBtn() {
@@ -41,34 +65,36 @@ function showLoadingText() {
     main.appendChild(loading);
 }
 
+function handleResult(data: { Response: string; Error: string; Search: string | any[]; totalResults: number; }, pageNumber: number) {
+    removeLoading();
+
+    if (data.Response === 'False') {
+        showMessage(data.Error);
+    } else {
+        for (let i = 0, length = data.Search.length; i < length; i++) {
+            let card = createCardElement(data.Search[i]);
+            cardwrapper.appendChild(card);
+        }
+        main.appendChild(cardwrapper);
+
+        createLoadMoreBtn(data, pageNumber);
+    }
+}
+
+function createLoadMoreBtn(data: { Response?: string; Error?: string; Search?: string | any[]; totalResults: any; }, pageNumber: number){
+    if (Math.ceil(data.totalResults / 10) > pageNumber) {
+        const loadBtn = createElement("button", "load-btn")
+        let nextPage = ++pageNumber;
+        loadBtn.setAttribute('data-page', nextPage.toString());
+        let info = document.createTextNode('Load More');
+        loadBtn.appendChild(info)
+        main.appendChild(loadBtn);
+    }
+}
+
 function removeLoading() {
     let loading = document.querySelector('div.loading') as HTMLDivElement;
     loading.remove();
-}
-
-function fetchResult(page = 1) {
-    let name = searchInput.value.trim();
-    let year = y.value;
-    let searchType = type.value;
-    let url = `https://www.omdbapi.com/?apikey=${apikey}&s=${name}&y=${year}&type=${searchType}&page=${page}`;
-
-    if (page != 1) removeLoadMoreBtn();
-
-    showLoadingText();
-
-    fetch(url)
-        .then(response => {
-            response.json()
-                .then((data) => {
-                    removeLoading();
-                    handleResult(data, page);
-                })
-                .catch((err) => {
-                    showMessage(err);
-                })
-        }).catch(() => {
-            showMessage("Some error occured");
-        });
 }
 
 function createElement(tagName: string, ...classes: (string)[]) {
@@ -111,26 +137,6 @@ function createCardElement(item: { Title: string; Poster: string; Year: string; 
     btn.appendChild(info);
     card.appendChild(btn);
     return card;
-}
-
-function handleResult(data: { Response: string; Error: string; Search: string | any[]; totalResults: number; }, page: number) {
-    if (data.Response === 'False') {
-        showMessage(data.Error);
-    } else {
-        for (let i = 0, length = data.Search.length; i < length; i++) {
-            let card = createCardElement(data.Search[i]);
-            cardwrapper.appendChild(card);
-        }
-        main.appendChild(cardwrapper);
-        if (Math.ceil(data.totalResults / 10) > page) {
-            const loadBtn = createElement("button", "load-btn")
-            let nextPage = ++page;
-            loadBtn.setAttribute('data-page', nextPage.toString());
-            let info = document.createTextNode('Load More');
-            loadBtn.appendChild(info)
-            main.appendChild(loadBtn);
-        }
-    }
 }
 
 function showMessage(errorText: string) {
@@ -234,7 +240,7 @@ function createModal(data: OMDBData) {
 }
 
 function fetchInfo(imdbID: string) {
-    let url = `https://www.omdbapi.com/?apikey=${apikey}&i=${imdbID}&plot=full`;
+    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}&plot=full`;
 
     fetch(url).then(response => {
         response.json().then(data => {

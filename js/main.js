@@ -1,9 +1,9 @@
 "use strict";
-const apikey = 'eaa8df42';
+const APIKEY = 'eaa8df42';
 const main = document.getElementById('main');
 const searchForm = document.getElementById('searchForm');
 const searchInput = searchForm.querySelector("#search");
-const y = searchForm.querySelector("input[type='number']");
+const yearInput = searchForm.querySelector("input[type='number']");
 const type = searchForm.querySelector("select");
 let cardwrapper;
 main.addEventListener('click', mainClicked);
@@ -22,6 +22,27 @@ function clearPreviousResult() {
         main.removeChild(main.firstChild);
     }
 }
+function fetchResult(pageNumber = 1) {
+    let name = searchInput.value.trim();
+    let year = yearInput.value;
+    let searchType = type.value;
+    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${name}&y=${year}&type=${searchType}&page=${pageNumber}`;
+    if (pageNumber != 1)
+        removeLoadMoreBtn();
+    showLoadingText();
+    fetch(url)
+        .then(response => {
+        response.json()
+            .then((data) => {
+            handleResult(data, pageNumber);
+        })
+            .catch((err) => {
+            showMessage(err);
+        });
+    }).catch(() => {
+        showMessage("Some error occured");
+    });
+}
 function removeLoadMoreBtn() {
     let loadBtn = document.querySelector('.load-btn');
     loadBtn.remove();
@@ -32,31 +53,33 @@ function showLoadingText() {
     loading.appendChild(loadingText);
     main.appendChild(loading);
 }
+function handleResult(data, pageNumber) {
+    removeLoading();
+    if (data.Response === 'False') {
+        showMessage(data.Error);
+    }
+    else {
+        for (let i = 0, length = data.Search.length; i < length; i++) {
+            let card = createCardElement(data.Search[i]);
+            cardwrapper.appendChild(card);
+        }
+        main.appendChild(cardwrapper);
+        createLoadMoreBtn(data, pageNumber);
+    }
+}
+function createLoadMoreBtn(data, pageNumber) {
+    if (Math.ceil(data.totalResults / 10) > pageNumber) {
+        const loadBtn = createElement("button", "load-btn");
+        let nextPage = ++pageNumber;
+        loadBtn.setAttribute('data-page', nextPage.toString());
+        let info = document.createTextNode('Load More');
+        loadBtn.appendChild(info);
+        main.appendChild(loadBtn);
+    }
+}
 function removeLoading() {
     let loading = document.querySelector('div.loading');
     loading.remove();
-}
-function fetchResult(page = 1) {
-    let name = searchInput.value.trim();
-    let year = y.value;
-    let searchType = type.value;
-    let url = `https://www.omdbapi.com/?apikey=${apikey}&s=${name}&y=${year}&type=${searchType}&page=${page}`;
-    if (page != 1)
-        removeLoadMoreBtn();
-    showLoadingText();
-    fetch(url)
-        .then(response => {
-        response.json()
-            .then((data) => {
-            removeLoading();
-            handleResult(data, page);
-        })
-            .catch((err) => {
-            showMessage(err);
-        });
-    }).catch(() => {
-        showMessage("Some error occured");
-    });
 }
 function createElement(tagName, ...classes) {
     let element = document.createElement(tagName);
@@ -91,26 +114,6 @@ function createCardElement(item) {
     btn.appendChild(info);
     card.appendChild(btn);
     return card;
-}
-function handleResult(data, page) {
-    if (data.Response === 'False') {
-        showMessage(data.Error);
-    }
-    else {
-        for (let i = 0, length = data.Search.length; i < length; i++) {
-            let card = createCardElement(data.Search[i]);
-            cardwrapper.appendChild(card);
-        }
-        main.appendChild(cardwrapper);
-        if (Math.ceil(data.totalResults / 10) > page) {
-            const loadBtn = createElement("button", "load-btn");
-            let nextPage = ++page;
-            loadBtn.setAttribute('data-page', nextPage.toString());
-            let info = document.createTextNode('Load More');
-            loadBtn.appendChild(info);
-            main.appendChild(loadBtn);
-        }
-    }
 }
 function showMessage(errorText) {
     let h3 = createElement('h3');
@@ -195,7 +198,7 @@ function createModal(data) {
     }
 }
 function fetchInfo(imdbID) {
-    let url = `https://www.omdbapi.com/?apikey=${apikey}&i=${imdbID}&plot=full`;
+    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}&plot=full`;
     fetch(url).then(response => {
         response.json().then(data => {
             createModal(data);
