@@ -140,6 +140,15 @@ function showModal() {
     closeBtn.addEventListener('click', () => {
         modal.remove();
     });
+    modal.addEventListener('click', function (event) {
+        let target = event.target;
+        let parentNode = target.parentElement;
+        if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
+        }
+        else {
+            modal.remove();
+        }
+    });
 }
 function createModal(data) {
     let myModal = createElement('div', 'modal');
@@ -181,7 +190,7 @@ function createModal(data) {
         if (key == 'Poster') {
             let img = createElement("img");
             img.setAttribute('height', '320px');
-            img.setAttribute('width', '310px');
+            img.setAttribute('width', 'auto');
             img.setAttribute('alt', 'Poster');
             img.setAttribute('class', 'poster');
             img.src = value != "N/A" ? value : "no-poster.jpg";

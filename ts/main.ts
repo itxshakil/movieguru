@@ -5,7 +5,7 @@ const searchInput = searchForm.querySelector("#search") as HTMLInputElement;
 const yearInput = searchForm.querySelector("input[type='number']") as HTMLInputElement;
 const type = searchForm.querySelector("select") as HTMLSelectElement;
 
-let cardwrapper:HTMLDivElement;
+let cardwrapper: HTMLDivElement;
 
 main.addEventListener('click', mainClicked);
 
@@ -81,7 +81,7 @@ function handleResult(data: { Response: string; Error: string; Search: string | 
     }
 }
 
-function createLoadMoreBtn(data: { Response?: string; Error?: string; Search?: string | any[]; totalResults: any; }, pageNumber: number){
+function createLoadMoreBtn(data: { Response?: string; Error?: string; Search?: string | any[]; totalResults: any; }, pageNumber: number) {
     if (Math.ceil(data.totalResults / 10) > pageNumber) {
         const loadBtn = createElement("button", "load-btn")
         let nextPage = ++pageNumber;
@@ -153,7 +153,7 @@ function mainClicked(event: Event) {
         fetchInfo(imdbID);
     }
     if (target.classList.contains('load-btn')) {
-        let pageNumber  = target.dataset.page  as string;
+        let pageNumber = target.dataset.page as string;
         fetchResult(parseInt(pageNumber));
     }
 }
@@ -168,8 +168,19 @@ function showModal() {
     closeBtn.addEventListener('click', () => {
         modal.remove();
     });
+
+    modal.addEventListener('click', function (event: Event) {
+        let target = event.target as HTMLElement;
+        let parentNode = target.parentElement as Node;
+
+        if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
+
+        } else {
+            modal.remove();
+        }
+    });
 }
-interface OMDBData extends Object{
+interface OMDBData extends Object {
     Ratings: { Source: string, Value: string }[]
 }
 function createModal(data: OMDBData) {
@@ -199,7 +210,7 @@ function createModal(data: OMDBData) {
             for (let i = 0; i < value.length; i++) {
                 let h3 = createElement('h3', "ratings-" + i);
                 let Ratings = data.Ratings as [];
-                let Rating =  Ratings[i] as {Source:string, Value:string };
+                let Rating = Ratings[i] as { Source: string, Value: string };
                 let ratingSource = Rating.Source
                 let ratingValue = Rating.Value
                 let textValue = document.createTextNode(`${ratingSource} : ${ratingValue}`);
@@ -220,7 +231,7 @@ function createModal(data: OMDBData) {
         if (key == 'Poster') {
             let img = createElement("img") as HTMLImageElement;
             img.setAttribute('height', '320px');
-            img.setAttribute('width', '310px');
+            img.setAttribute('width', 'auto');
             img.setAttribute('alt', 'Poster');
             img.setAttribute('class', 'poster');
             img.src = value != "N/A" ? value : "no-poster.jpg";
