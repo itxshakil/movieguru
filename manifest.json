@@ -1,6 +1,7 @@
 {
     "name" : "Movie Guru",
     "short_name" : "Movinfo",
+    "description" : "Movie Guru is minimal Movie detail App, where you can read details about movies, series and episodes",
     "icons" : [{
             "src" :"images/logo-128.png",
             "sizes" : "128x128",
@@ -33,6 +34,7 @@
         }],
     "lang" : "en-US",
     "start_url" : "/movie-guru/index.html",
+    "scope" : "/movie-guru/",
     "display" : "standalone",
     "background_color" : "#1976d2",
     "theme_color" : "#1976d2"
