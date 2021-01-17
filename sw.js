@@ -1,4 +1,4 @@
-var CACHE_NAME = 'my-site-cache-v3';
+var CACHE_NAME = 'movie-guru-cache-v3';
 var urlsToCache = [
     '/movie-guru/',
     '/movie-guru/index.html',
