@@ -33,7 +33,7 @@
             "type" : "image/png"
         }],
     "lang" : "en-US",
-    "start_url" : "/movie-guru/index.html",
+    "start_url" : "/movie-guru/index.html?source=pwa",
     "scope" : "/movie-guru/",
     "display" : "standalone",
     "background_color" : "#1976d2",
