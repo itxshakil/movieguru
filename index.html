@@ -109,12 +109,16 @@
         </div>
     </main>
     <footer>
-        <div class="footer-copyright">Movie Guru &copy; 2019-21. All Rights Reserved.</div>
+        <div class="footer-copyright">Movie Guru &copy; 2019-<span id="current-year"></span> All Rights Reserved.</div>
         <div class="credit">Designed with <span class="heart" role="icon">♥</span> By <a
                 href="https://shakiltech.com">Shakil
                 Alam</a></div>
     </footer>
     <script>
+        document.addEventListener('DOMContentLoaded', ()=> {
+            document.getElementById("current-year").innerHTML = new Date().getFullYear();
+        });
+
         window.onload = () => {
             'use strict';
             if ('serviceWorker' in navigator) {
