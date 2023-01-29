@@ -1,4 +1,4 @@
-# [Movie Guru](https://shakiltech.som/movie-guru/)
+# [Movie Guru](https://movie-guru.shakiltech.com)
 
 Movie Guru is minimal Movie detail <abbr title="Progressive Web Application">PWA</abbr>, where you can read details about movies, series and episodes and their rating from all sources such as Rotten Tomatoes and IMDB at one place which is developed with Typescript.
 
