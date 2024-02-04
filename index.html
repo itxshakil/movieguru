@@ -58,6 +58,7 @@
             color: #ffffff;
             text-align: center;
             padding: 15px;
+            animation: bounce 1s infinite;
         }
 
         .notice-content {
@@ -74,23 +75,37 @@
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background-color: #2ecc71;
+            background-color: #1976d2;
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
         }
+
+        @keyframes bounce {
+            0%, 100% {
+              transform: translateY(-25%);
+              animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+              transform: translateY(0);
+              animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+          }
     </style>
 </head>
 
 <body>
     <div class="notice-container">
-    <div class="notice-header">
-        <h2>New Design Alert!</h2>
-    </div>
-    <div class="notice-content">
-        <p>We are excited to announce that we have rolled out a fresh new design for our website.</p>
-        <p>Explore the enhanced user experience and let us know your feedback.</p>
-        <a href="https://movieguru.shakiltech.com?utm_source=oldwebsite&utm_medium=link&utm_campaign=transition" class="notice-button">Check it out now</a>
+        <div class="notice-header">
+            <h2>🎉 New Design Alert! 🚀</h2>
+        </div>
+        <div class="notice-content">
+            <p>Explore our refreshed website design for a faster and sleeker experience. Your browsing just got turbocharged! ⚡</p>
+            <a href="https://movieguru.shakiltech.com?utm_source=oldwebsite&amp;utm_medium=link&amp;utm_campaign=transition" class="notice-button">
+                <span>Check out the Updates</span> 
+                <span class="arrow">➔</span>
+            </a>
+        </div>
     </div>
 </div>
     <header>
