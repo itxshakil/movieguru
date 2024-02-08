@@ -92,6 +92,26 @@
             }
           }
 
+     .animate-ping {
+        animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+        position: absolute;
+        display: inline-flex;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        background-color: #D21919; /* You can replace this with your desired background color */
+        opacity: 0.75;
+        right: 12px;
+        /*! top: 0; */
+      }
+      
+      @keyframes ping {
+        75%, 100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
      .floating-buttons {
             position: fixed;
             bottom: 20px;
@@ -114,6 +134,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             text-decoration: none; /* Remove default underline from anchor tag */
+            position: relative;
         }
 
         .floating-button:hover {
@@ -132,7 +153,7 @@
 </head>
 
 <body>
-    <div class="notice-container">
+    <div class="notice-container" style="display:none;">
         <div class="notice-header">
             <h2>🎉 New Design Alert! 🚀</h2>
         </div>
@@ -217,7 +238,9 @@
     </footer>
     <div class="floating-buttons">
         <a href="https://www.facebook.com/moviegurufb" class="floating-button follow-button">Follow on Facebook</a>
-        <a href="https://movieguru.shakiltech.com/?utm_source=oldwebsite&utm_medium=floating_link&utm_campaign=transition" class="floating-button new-design-button">New Design</a>
+        <a href="https://movieguru.shakiltech.com/?utm_source=oldwebsite&amp;utm_medium=floating_link&amp;utm_campaign=transition" class="floating-button new-design-button">
+          <span class="animate-ping"></span>Try New Design<span class="arrow">➔</span>
+        </a>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', ()=> {
