@@ -65,6 +65,11 @@ function handleResult(data, pageNumber) {
         }
         main.appendChild(cardwrapper);
         createLoadMoreBtn(data, pageNumber);
+
+        gtag('event', 'search', {
+            'event_category': 'Movie Search',
+            'event_label': searchInput.value.trim()
+        });
     }
 }
 function createLoadMoreBtn(data, pageNumber) {
@@ -126,6 +131,11 @@ function mainClicked(event) {
     if (target.classList.contains('model-btn')) {
         let imdbID = target.dataset.id;
         fetchInfo(imdbID);
+
+        gtag('event', 'view_details', {
+            'event_category': 'Movie Details',
+            'event_label': imdbID
+        });
     }
     if (target.classList.contains('load-btn')) {
         let pageNumber = target.dataset.page;
