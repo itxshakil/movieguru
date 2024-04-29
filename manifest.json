@@ -33,7 +33,7 @@
             "type" : "image/png"
         }],
     "lang" : "en-US",
-    "start_url" : "/?utm_source=homescreen",
+    "start_url" : "/index.html?utm_source=homescreen",
     "display" : "standalone",
     "background_color" : "#1976d2",
     "theme_color" : "#1976d2",
