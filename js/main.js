@@ -7,7 +7,7 @@ const yearInput = searchForm.querySelector("input[type='number']");
 const type = searchForm.querySelector("select");
 let cardwrapper;
 main.addEventListener('click', mainClicked);
-searchForm.addEventListener('submit', function (event) {
+searchForm.addEventListener('submit', (event) => {
     event.preventDefault();
     clearPreviousResult();
     if (searchInput.value.trim().length === 0) {
@@ -23,10 +23,10 @@ function clearPreviousResult() {
     }
 }
 function fetchResult(pageNumber = 1) {
-    let name = searchInput.value.trim();
-    let year = yearInput.value;
-    let searchType = type.value;
-    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${name}&y=${year}&type=${searchType}&page=${pageNumber}`;
+    const name = searchInput.value.trim();
+    const year = yearInput.value;
+    const searchType = type.value;
+    const url = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${name}&y=${year}&type=${searchType}&page=${pageNumber}`;
     if (pageNumber != 1)
         removeLoadMoreBtn();
     showLoadingText();
@@ -44,12 +44,12 @@ function fetchResult(pageNumber = 1) {
     });
 }
 function removeLoadMoreBtn() {
-    let loadBtn = document.querySelector('.load-btn');
+    const loadBtn = document.querySelector('.load-btn');
     loadBtn.remove();
 }
 function showLoadingText() {
-    let loading = createElement('div', 'loading');
-    let loadingText = document.createTextNode('Loading Please Wait...');
+    const loading = createElement('div', 'loading');
+    const loadingText = document.createTextNode('Loading Please Wait...');
     loading.appendChild(loadingText);
     main.appendChild(loading);
 }
@@ -60,99 +60,94 @@ function handleResult(data, pageNumber) {
     }
     else {
         for (let i = 0, length = data.Search.length; i < length; i++) {
-            let card = createCardElement(data.Search[i]);
+            const card = createCardElement(data.Search[i]);
             cardwrapper.appendChild(card);
         }
         main.appendChild(cardwrapper);
         createLoadMoreBtn(data, pageNumber);
-
-        gtag('event', 'search', {
-            'event_category': 'Movie Search',
-            'event_label': searchInput.value.trim()
-        });
+        trackEvent('search', 'engagement', `Searched ${searchInput.value.trim()} Queried`);
     }
 }
 function createLoadMoreBtn(data, pageNumber) {
     if (Math.ceil(data.totalResults / 10) > pageNumber) {
         const loadBtn = createElement("button", "load-btn");
-        let nextPage = ++pageNumber;
+        const nextPage = ++pageNumber;
         loadBtn.setAttribute('data-page', nextPage.toString());
-        let info = document.createTextNode('Load More');
+        const info = document.createTextNode('Load More');
         loadBtn.appendChild(info);
         main.appendChild(loadBtn);
     }
 }
 function removeLoading() {
-    let loading = document.querySelector('div.loading');
+    const loading = document.querySelector('div.loading');
     loading.remove();
 }
 function createElement(tagName, ...classes) {
-    let element = document.createElement(tagName);
+    const element = document.createElement(tagName);
     element.classList.add(...classes);
     return element;
 }
+function isTruthyValue(value) {
+    return value && value != 'N/A';
+}
 function createCardElement(item) {
-    let card = createElement("div", "card");
-    let img = createElement("img", "poster");
+    const card = createElement("div", "card");
+    const img = createElement("img", "poster");
     img.setAttribute("height", "320px");
     img.setAttribute("width", "100%");
     img.setAttribute("alt", item.Title);
     img.setAttribute("loading", "lazy");
-    img.src = item.Poster != "N/A" ? item.Poster : "no-poster.jpg";
+    img.src = item.Poster == "N/A" ? "no-poster.jpg" : item.Poster;
     card.appendChild(img);
-    let h2 = createElement("h2");
-    let title = document.createTextNode(item.Title);
+    const h2 = createElement("h2");
+    const title = document.createTextNode(item.Title);
     h2.appendChild(title);
     card.appendChild(h2);
     let h3 = createElement("h3");
-    let year = document.createTextNode("Year : " + item.Year);
+    const year = document.createTextNode(`Year : ${item.Year}`);
     h3.appendChild(year);
     card.appendChild(h3);
     h3 = createElement("h3");
-    let type = document.createTextNode("Type : " + item.Type);
+    const type = document.createTextNode(`Type : ${item.Type}`);
     h3.appendChild(type);
     card.appendChild(h3);
-    let btn = createElement("button", "model-btn");
+    const btn = createElement("button", "model-btn");
     btn.setAttribute('data-id', item.imdbID);
     btn.setAttribute('id', 'modal-btn');
-    let info = document.createTextNode('More Info');
+    const info = document.createTextNode('More Info');
     btn.appendChild(info);
     card.appendChild(btn);
     return card;
 }
 function showMessage(errorText) {
-    let h3 = createElement('h3');
-    let error = document.createTextNode(errorText);
+    const h3 = createElement('h3');
+    const error = document.createTextNode(errorText);
     h3.appendChild(error);
     main.appendChild(h3);
 }
 function mainClicked(event) {
-    let target = event.target;
+    const target = event.target;
     if (target.classList.contains('model-btn')) {
-        let imdbID = target.dataset.id;
+        const imdbID = target.dataset.id;
         fetchInfo(imdbID);
-
-        gtag('event', 'view_details', {
-            'event_category': 'Movie Details',
-            'event_label': imdbID
-        });
+        trackEvent('view_details', 'engagement', `Movie Details ${imdbID}`);
     }
     if (target.classList.contains('load-btn')) {
-        let pageNumber = target.dataset.page;
+        const pageNumber = target.dataset.page;
         fetchResult(parseInt(pageNumber));
     }
 }
 function showModal() {
-    let modal = document.querySelector('#my-modal');
+    const modal = document.querySelector('#my-modal');
     const closeBtn = modal.querySelector('.close');
     modal.style.display = 'block';
     modal.scrollIntoView();
     closeBtn.addEventListener('click', () => {
         modal.remove();
     });
-    modal.addEventListener('click', function (event) {
-        let target = event.target;
-        let parentNode = target.parentElement;
+    modal.addEventListener('click', (event) => {
+        const target = event.target;
+        const parentNode = target.parentElement;
         if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
         }
         else {
@@ -161,67 +156,92 @@ function showModal() {
     });
 }
 function createModal(data) {
-    let myModal = createElement('div', 'modal');
+    const myModal = createElement('div', 'modal');
     myModal.setAttribute('id', 'my-modal');
-    let modalHeader = createElement('div', 'modal-header');
-    let spanClose = createElement('span', 'close');
-    let closebtn = document.createTextNode('x');
+    const modalHeader = createElement('div', 'modal-header');
+    const spanClose = createElement('span', 'close');
+    const closebtn = document.createTextNode('x');
     spanClose.appendChild(closebtn);
     modalHeader.appendChild(spanClose);
-    let modalBody = createElement('div', 'modal-body');
-    for (let [key, value] of Object.entries(data)) {
+    const modalBody = createElement('div', 'modal-body');
+    for (const [key, value] of Object.entries(data)) {
         if (key == 'Response' || key == 'Type') {
             continue;
         }
         if (key == 'Ratings') {
-            let ratings = createElement('h3');
-            let textratings = document.createTextNode('Ratings :');
+            const ratings = createElement('h3');
+            const textratings = document.createTextNode('Ratings :');
             ratings.appendChild(textratings);
             modalBody.appendChild(ratings);
             for (let i = 0; i < value.length; i++) {
-                let h3 = createElement('h3', "ratings-" + i);
-                let Ratings = data.Ratings;
-                let Rating = Ratings[i];
-                let ratingSource = Rating.Source;
-                let ratingValue = Rating.Value;
-                let textValue = document.createTextNode(`${ratingSource} : ${ratingValue}`);
-                h3.appendChild(textValue);
-                modalBody.appendChild(h3);
+                const Ratings = data.Ratings;
+                const Rating = Ratings[i];
+                const ratingSource = Rating.Source;
+                const ratingValue = Rating.Value;
+                if (isTruthyValue(ratingValue)) {
+                    const h3 = createElement('h3', `ratings-${i}`);
+                    const textValue = document.createTextNode(`${ratingSource} : ${ratingValue}`);
+                    h3.appendChild(textValue);
+                    modalBody.appendChild(h3);
+                }
             }
             continue;
         }
         if (key == 'Title') {
-            let h2 = createElement('h2');
-            let headerTitle = document.createTextNode(value);
+            const h2 = createElement('h2');
+            const headerTitle = document.createTextNode(value);
             h2.appendChild(headerTitle);
             modalHeader.appendChild(h2);
             continue;
         }
         if (key == 'Poster') {
-            let img = createElement("img");
+            const img = createElement("img");
             img.setAttribute('height', '320px');
             img.setAttribute('width', 'auto');
             img.setAttribute('alt', 'Poster');
             img.setAttribute('class', 'poster');
-            img.src = value != "N/A" ? value : "no-poster.jpg";
+            img.src = value == "N/A" ? "no-poster.jpg" : value;
             modalBody.prepend(img);
             continue;
         }
-        let h3 = document.createElement('h3');
-        let textValue = document.createTextNode(`${key} : ${value}`);
-        h3.appendChild(textValue);
-        modalBody.appendChild(h3);
-        myModal.appendChild(modalHeader);
-        myModal.appendChild(modalBody);
-        main.appendChild(myModal);
+        if (isTruthyValue(value)) {
+            const h3 = document.createElement('h3');
+            const textValue = document.createTextNode(`${key} : ${value}`);
+            h3.appendChild(textValue);
+            modalBody.appendChild(h3);
+        }
     }
+    myModal.appendChild(modalHeader);
+    myModal.appendChild(modalBody);
+    main.appendChild(myModal);
 }
 function fetchInfo(imdbID) {
-    let url = `https://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}&plot=full`;
-    fetch(url).then(response => {
+    const url = `https://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}&plot=full`;
+    fetch(url)
+        .then(response => {
         response.json().then(data => {
             createModal(data);
             showModal();
         });
     });
+}
+function trackEvent(action, category, label, value = null) {
+    try {
+        if (typeof gtag === 'function') {
+            const eventData = {
+                'event_category': category,
+                'event_label': label,
+            };
+            if (typeof value === 'number') {
+                eventData['value'] = value;
+            }
+            gtag('event', action, eventData);
+        }
+        else {
+            console.warn('Google Analytics is not loaded');
+        }
+    }
+    catch (error) {
+        console.error('Error sending event to Google Analytics', error);
+    }
 }
