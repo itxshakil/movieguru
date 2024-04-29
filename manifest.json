@@ -33,9 +33,15 @@
             "type" : "image/png"
         }],
     "lang" : "en-US",
-    "start_url" : "/movie-guru/index.html?source=pwa",
-    "scope" : "/movie-guru/",
+    "start_url" : "/?utm_source=homescreen",
     "display" : "standalone",
     "background_color" : "#1976d2",
-    "theme_color" : "#1976d2"
+    "theme_color" : "#1976d2",
+    "features": ["Ratings from All Major Sources", "Simple UI", "Alternative to IMDb", "Lightweight"],
+    "categories": ["Entertainment", "Movies", "Reference", "Media"],
+    "scope": "/",
+    "serviceworker": {
+        "src": "/sw.js",
+        "scope": "/"
+    }
 }

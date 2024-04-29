@@ -5,6 +5,11 @@ const searchForm = document.getElementById('searchForm');
 const searchInput = searchForm.querySelector("#search");
 const yearInput = searchForm.querySelector("input[type='number']");
 const type = searchForm.querySelector("select");
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
 let cardwrapper;
 main.addEventListener('click', mainClicked);
 searchForm.addEventListener('submit', (event) => {
@@ -154,6 +159,7 @@ function showModal() {
             modal.remove();
         }
     });
+    deferredPrompt.prompt();
 }
 function createModal(data) {
     const myModal = createElement('div', 'modal');

@@ -4,6 +4,11 @@ const searchForm = document.getElementById('searchForm') as HTMLFormElement;
 const searchInput = searchForm.querySelector("#search") as HTMLInputElement;
 const yearInput = searchForm.querySelector("input[type='number']") as HTMLInputElement;
 const type = searchForm.querySelector("select") as HTMLSelectElement;
+let deferredPrompt:Event;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
 
 let cardwrapper: HTMLDivElement;
 
@@ -185,6 +190,9 @@ function showModal() {
             modal.remove();
         }
     });
+
+
+    deferredPrompt.prompt();
 }
 interface OMDBData extends Object {
     Ratings: Array<{ Source: string, Value: string }>
