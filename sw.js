@@ -11,7 +11,7 @@ const STATIC_ASSETS = [
 
 const basicPathsToCache = [
     '/',
-    '/?utm_source=homescreen',
+    '/index.html?utm_source=homescreen',
     '/index.html',
     '/css/style.css',
     '/js/main.js',
