@@ -191,7 +191,7 @@ function showModal() {
         }
     });
 
-    if(deferred prompt){
+    if(deferredPrompt){
        deferredPrompt.prompt();
     }
 }
