@@ -159,7 +159,9 @@ function showModal() {
             modal.remove();
         }
     });
-    deferredPrompt.prompt();
+    if(deferredPrompt){
+       deferredPrompt.prompt();
+    }
 }
 function createModal(data) {
     const myModal = createElement('div', 'modal');
