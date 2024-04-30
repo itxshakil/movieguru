@@ -191,8 +191,9 @@ function showModal() {
         }
     });
 
-
-    deferredPrompt.prompt();
+    if(deferred prompt){
+       deferredPrompt.prompt();
+    }
 }
 interface OMDBData extends Object {
     Ratings: Array<{ Source: string, Value: string }>
