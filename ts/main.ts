@@ -75,6 +75,8 @@ function handleResult(data: { Response: string; Error: string; Search: string | 
 
     if (data.Response === 'False') {
         showMessage(data.Error);
+
+        addAdvertisement();
     } else {
         for (let i = 0, length = data.Search.length; i < length; i++) {
             const card = createCardElement(data.Search[i]);
@@ -82,9 +84,24 @@ function handleResult(data: { Response: string; Error: string; Search: string | 
         }
         main.appendChild(cardwrapper);
 
+        addAdvertisement();
+
         createLoadMoreBtn(data, pageNumber);
         trackEvent('search', 'engagement', `Searched ${searchInput.value.trim()} Queried`);
     }
+}
+
+function addAdvertisement() {
+    const ad = document.createElement('ins');
+    ad.className = 'adsbygoogle';
+    ad.style.display = 'block';
+    ad.setAttribute('data-ad-format', 'fluid');
+    ad.setAttribute('data-ad-layout-key', '-6t+ed+2i-1n-4w');
+    ad.setAttribute('data-ad-client', 'ca-pub-4132498105758259');
+    ad.setAttribute('data-ad-slot', '2203921427');
+    main.appendChild(ad);
+    
+    (adsbygoogle = window.adsbygoogle || []).push({});
 }
 
 function createLoadMoreBtn(data: { Response?: string; Error?: string; Search?: string | any[]; totalResults: any; }, pageNumber: number) {

@@ -62,6 +62,7 @@ function handleResult(data, pageNumber) {
     removeLoading();
     if (data.Response === 'False') {
         showMessage(data.Error);
+        addAdvertisement();
     }
     else {
         for (let i = 0, length = data.Search.length; i < length; i++) {
@@ -69,9 +70,21 @@ function handleResult(data, pageNumber) {
             cardwrapper.appendChild(card);
         }
         main.appendChild(cardwrapper);
+        addAdvertisement();
         createLoadMoreBtn(data, pageNumber);
         trackEvent('search', 'engagement', `Searched ${searchInput.value.trim()} Queried`);
     }
+}
+function addAdvertisement() {
+    const ad = document.createElement('ins');
+    ad.className = 'adsbygoogle';
+    ad.style.display = 'block';
+    ad.setAttribute('data-ad-format', 'fluid');
+    ad.setAttribute('data-ad-layout-key', '-6t+ed+2i-1n-4w');
+    ad.setAttribute('data-ad-client', 'ca-pub-4132498105758259');
+    ad.setAttribute('data-ad-slot', '2203921427');
+    main.appendChild(ad);
+    (adsbygoogle = window.adsbygoogle || []).push({});
 }
 function createLoadMoreBtn(data, pageNumber) {
     if (Math.ceil(data.totalResults / 10) > pageNumber) {
@@ -159,8 +172,8 @@ function showModal() {
             modal.remove();
         }
     });
-    if(deferredPrompt){
-       deferredPrompt.prompt();
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
     }
 }
 function createModal(data) {
