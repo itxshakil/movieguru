@@ -100,7 +100,7 @@ function addAdvertisement() {
     ad.setAttribute('data-ad-client', 'ca-pub-4132498105758259');
     ad.setAttribute('data-ad-slot', '2203921427');
     main.appendChild(ad);
-    
+
     (adsbygoogle = window.adsbygoogle || []).push({});
 }
 
@@ -140,6 +140,7 @@ function createCardElement(item: { Title: string; Poster: string; Year: string; 
     img.setAttribute("alt", item.Title);
     img.setAttribute("loading", "lazy");
     img.src = item.Poster == "N/A" ? "no-poster.jpg" : item.Poster
+    img.setAttribute('data-id', item.imdbID);
     card.appendChild(img);
 
     const h2 = createElement("h2");
@@ -180,6 +181,11 @@ function mainClicked(event: Event) {
         fetchInfo(imdbID);
         trackEvent('view_details', 'engagement', `Movie Details ${imdbID}`);
     }
+    if (target.classList.contains('poster')) {
+        const imdbID = target.dataset.id as string;
+        fetchInfo(imdbID);
+        trackEvent('view_details', 'engagement', `Movie Details ${imdbID}`);
+    }
     if (target.classList.contains('load-btn')) {
         const pageNumber = target.dataset.page as string;
         fetchResult(parseInt(pageNumber));
@@ -187,13 +193,16 @@ function mainClicked(event: Event) {
 }
 
 function showModal() {
-    const modal = document.querySelector('#my-modal') as HTMLDivElement;
+    const modal = document.querySelector('#my-modal') as HTMLDialogElement;
     const closeBtn = modal.querySelector('.close') as HTMLElement;
 
-    modal.style.display = 'block';
+    modal.showModal();
 
-    modal.scrollIntoView();
     closeBtn.addEventListener('click', () => {
+        modal.close();
+    });
+
+    modal.addEventListener('close', ()=>{
         modal.remove();
     });
 
@@ -204,7 +213,7 @@ function showModal() {
         if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
 
         } else {
-            modal.remove();
+            modal.close();
         }
     });
 
@@ -217,7 +226,7 @@ interface OMDBData extends Object {
 }
 
 function createModal(data: OMDBData) {
-    const myModal = createElement('div', 'modal');
+    const myModal = createElement('dialog', 'modal') as HTMLDialogElement;
     myModal.setAttribute('id', 'my-modal');
 
     const modalHeader = createElement('div', 'modal-header');
