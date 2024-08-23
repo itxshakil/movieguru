@@ -116,6 +116,7 @@ function createCardElement(item) {
     img.setAttribute("alt", item.Title);
     img.setAttribute("loading", "lazy");
     img.src = item.Poster == "N/A" ? "no-poster.jpg" : item.Poster;
+    img.setAttribute('data-id', item.imdbID);
     card.appendChild(img);
     const h2 = createElement("h2");
     const title = document.createTextNode(item.Title);
@@ -150,6 +151,11 @@ function mainClicked(event) {
         fetchInfo(imdbID);
         trackEvent('view_details', 'engagement', `Movie Details ${imdbID}`);
     }
+    if (target.classList.contains('poster')) {
+        const imdbID = target.dataset.id;
+        fetchInfo(imdbID);
+        trackEvent('view_details', 'engagement', `Movie Details ${imdbID}`);
+    }
     if (target.classList.contains('load-btn')) {
         const pageNumber = target.dataset.page;
         fetchResult(parseInt(pageNumber));
@@ -158,9 +164,11 @@ function mainClicked(event) {
 function showModal() {
     const modal = document.querySelector('#my-modal');
     const closeBtn = modal.querySelector('.close');
-    modal.style.display = 'block';
-    modal.scrollIntoView();
+    modal.showModal();
     closeBtn.addEventListener('click', () => {
+        modal.close();
+    });
+    modal.addEventListener('close', () => {
         modal.remove();
     });
     modal.addEventListener('click', (event) => {
@@ -169,7 +177,7 @@ function showModal() {
         if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
         }
         else {
-            modal.remove();
+            modal.close();
         }
     });
     if (deferredPrompt) {
@@ -177,7 +185,7 @@ function showModal() {
     }
 }
 function createModal(data) {
-    const myModal = createElement('div', 'modal');
+    const myModal = createElement('dialog', 'modal');
     myModal.setAttribute('id', 'my-modal');
     const modalHeader = createElement('div', 'modal-header');
     const spanClose = createElement('span', 'close');
