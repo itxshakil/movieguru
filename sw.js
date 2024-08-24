@@ -1,6 +1,6 @@
 const DEBUG = true;
 
-const APP_CACHE = 'v-8.0.0';
+const APP_CACHE = 'v-8.0.1';
 const SEARCH_CACHE = 'search-cache-v-8.0.0';
 const INFO_CACHE = 'info-cache-v-8.0.0';
 const DYNAMIC_CACHE = 'dynamic-cache-v-8.0.0';
