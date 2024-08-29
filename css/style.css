@@ -20,6 +20,58 @@ html {
   scroll-behavior: smooth;
 }
 
+dialog {
+  animation: fade-out 0.7s ease-out;
+}
+
+dialog[open] {
+  animation: fade-in 0.7s ease-out;
+}
+
+dialog[open]::backdrop {
+  animation: backdrop-fade-in 0.7s ease-out forwards;
+}
+
+/* Animation keyframes */
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    display: none;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    display: block;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+    display: block;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+    display: none;
+  }
+}
+
+@keyframes backdrop-fade-in {
+  0% {
+    background-color: rgb(0 0 0 / 0%);
+  }
+
+  100% {
+    background-color: rgb(0 0 0 / 25%);
+  }
+}
+
 footer a {
   color: inherit;
 }
@@ -70,6 +122,7 @@ button {
   margin: 0.3rem 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   border-radius: 1rem;
+  margin-bottom: 1rem;
 }
 
 button:hover {
@@ -126,6 +179,7 @@ footer {
   border-radius: 0.5rem;
   padding:0;
   border: none;
+  max-width: 420px;
 }
 
 .modal::backdrop{
@@ -195,6 +249,11 @@ footer {
   form div {
     display: inline-block;
   }
+}
+
+.custom-h3 {
+  font-size: small;
+  color: #6b7280;
 }
 
 .features-section {
@@ -293,8 +352,17 @@ footer {
   }
 }
 
+.custom-h2 {
+  font-size: 1.1rem;
+  color: #111827;
+}
+
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
+  .custom-h3 {
+    color: #9ca3af;
+}
+
   .features-section {
       background-color: #1a202c;
       color: white;

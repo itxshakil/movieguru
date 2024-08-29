@@ -118,22 +118,21 @@ function createCardElement(item) {
     img.src = item.Poster == "N/A" ? "no-poster.jpg" : item.Poster;
     img.setAttribute('data-id', item.imdbID);
     card.appendChild(img);
+    const h3 = document.createElement("h3");
+    h3.classList.add("custom-h3");
+    const capitalizedType = item.Type.charAt(0).toUpperCase() + item.Type.slice(1).toLowerCase();
+    const typeYearText = document.createTextNode(`${capitalizedType} - ${item.Year}`);
+    h3.appendChild(typeYearText);
+    card.appendChild(h3);
     const h2 = createElement("h2");
+    h2.classList.add("custom-h2");
     const title = document.createTextNode(item.Title);
     h2.appendChild(title);
     card.appendChild(h2);
-    let h3 = createElement("h3");
-    const year = document.createTextNode(`Year : ${item.Year}`);
-    h3.appendChild(year);
-    card.appendChild(h3);
-    h3 = createElement("h3");
-    const type = document.createTextNode(`Type : ${item.Type}`);
-    h3.appendChild(type);
-    card.appendChild(h3);
     const btn = createElement("button", "model-btn");
     btn.setAttribute('data-id', item.imdbID);
     btn.setAttribute('id', 'modal-btn');
-    const info = document.createTextNode('More Info');
+    const info = document.createTextNode('View details →');
     btn.appendChild(info);
     card.appendChild(btn);
     return card;
@@ -169,16 +168,9 @@ function showModal() {
         modal.close();
     });
     modal.addEventListener('close', () => {
-        modal.remove();
-    });
-    modal.addEventListener('click', (event) => {
-        const target = event.target;
-        const parentNode = target.parentElement;
-        if (parentNode.classList.contains('modal-header') || parentNode.classList.contains('modal-body') || target.classList.contains('modal-header') || target.classList.contains('modal-body')) {
-        }
-        else {
-            modal.close();
-        }
+        setTimeout(() => {
+            modal.remove();
+        }, 700);
     });
     if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -194,11 +186,12 @@ function createModal(data) {
     modalHeader.appendChild(spanClose);
     const modalBody = createElement('div', 'modal-body');
     for (const [key, value] of Object.entries(data)) {
-        if (key == 'Response' || key == 'Type') {
+        if (key == 'Response' || key == 'Type' || key == 'imdbID') {
             continue;
         }
         if (key == 'Ratings') {
             const ratings = createElement('h3');
+            ratings.style.fontWeight = '600';
             const textratings = document.createTextNode('Ratings :');
             ratings.appendChild(textratings);
             modalBody.appendChild(ratings);
@@ -209,7 +202,11 @@ function createModal(data) {
                 const ratingValue = Rating.Value;
                 if (isTruthyValue(ratingValue)) {
                     const h3 = createElement('h3', `ratings-${i}`);
-                    const textValue = document.createTextNode(`${ratingSource} : ${ratingValue}`);
+                    const label = document.createElement('span');
+                    label.style.fontWeight = '600';
+                    label.textContent = `${ratingSource}: `;
+                    const textValue = document.createTextNode(ratingValue);
+                    h3.appendChild(label);
                     h3.appendChild(textValue);
                     modalBody.appendChild(h3);
                 }
@@ -223,6 +220,53 @@ function createModal(data) {
             modalHeader.appendChild(h2);
             continue;
         }
+        if (key === 'Runtime' && isTruthyValue(value)) {
+            const runtimeStr = value;
+            const runtimeMinutes = parseInt(runtimeStr);
+            const hours = Math.floor(runtimeMinutes / 60);
+            const minutes = runtimeMinutes % 60;
+            const formattedRuntime = `${hours}h ${minutes}m`;
+            const h3 = document.createElement('h3');
+            const label = document.createElement('span');
+            label.style.fontWeight = '600';
+            label.textContent = `${key}: `;
+            const textValue = document.createTextNode(formattedRuntime);
+            h3.appendChild(label);
+            h3.appendChild(textValue);
+            modalBody.appendChild(h3);
+            continue;
+        }
+        if (key == 'Plot' && isTruthyValue(value)) {
+            const plotFullText = value;
+            const plotExcerpt = plotFullText.length > 100 ? plotFullText.substring(0, 100) + '...' : plotFullText;
+            const h3 = document.createElement('h3');
+            const label = document.createElement('span');
+            label.style.fontWeight = '600';
+            label.textContent = `${key}: `;
+            h3.appendChild(label);
+            const plotText = document.createElement('span');
+            plotText.textContent = plotExcerpt;
+            plotText.classList.add('plot-text');
+            h3.appendChild(plotText);
+            const showMore = document.createElement('small');
+            showMore.textContent = plotFullText.length > 100 ? ' Show More' : '';
+            showMore.style.color = 'blue';
+            showMore.style.cursor = 'pointer';
+            showMore.classList.add('show-more');
+            h3.appendChild(showMore);
+            showMore.addEventListener('click', () => {
+                if (showMore.textContent === ' Show More') {
+                    plotText.textContent = plotFullText;
+                    showMore.textContent = ' Show Less';
+                }
+                else {
+                    plotText.textContent = plotExcerpt;
+                    showMore.textContent = ' Show More';
+                }
+            });
+            modalBody.appendChild(h3);
+            continue;
+        }
         if (key == 'Poster') {
             const img = createElement("img");
             img.setAttribute('height', '320px');
@@ -233,9 +277,29 @@ function createModal(data) {
             modalBody.prepend(img);
             continue;
         }
+        if (key == 'imdbVotes' && isTruthyValue(value)) {
+            const h3 = document.createElement('h3');
+            const label = document.createElement('span');
+            label.style.fontWeight = '600';
+            label.textContent = `${key} : `;
+            const imdbLink = document.createElement('a');
+            imdbLink.href = `https://www.imdb.com/title/${data.imdbID}/`;
+            imdbLink.target = '_blank';
+            imdbLink.textContent = value;
+            imdbLink.style.textDecoration = 'none';
+            imdbLink.style.color = 'inherit';
+            h3.appendChild(label);
+            h3.appendChild(imdbLink);
+            modalBody.appendChild(h3);
+            continue;
+        }
         if (isTruthyValue(value)) {
             const h3 = document.createElement('h3');
-            const textValue = document.createTextNode(`${key} : ${value}`);
+            const label = document.createElement('span');
+            label.style.fontWeight = '600';
+            label.textContent = `${key} : `;
+            const textValue = document.createTextNode(value);
+            h3.appendChild(label);
             h3.appendChild(textValue);
             modalBody.appendChild(h3);
         }
